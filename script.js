@@ -8,6 +8,7 @@ const PIECE_UNICODE = {
   b: { k: "♚", q: "♛", r: "♜", b: "♝", n: "♞", p: "♟" },
 };
 
+// DOM Elements
 const boardEl = document.getElementById("board");
 const turnLabelEl = document.getElementById("turnLabel");
 const gameStatusEl = document.getElementById("gameStatus");
@@ -16,6 +17,7 @@ const moveHistoryEl = document.getElementById("moveHistory");
 const promotionModal = document.getElementById("promotionModal");
 const promotionChoicesEl = document.getElementById("promotionChoices");
 
+// Game State
 const game = {
   board: [],
   turn: "w",
@@ -90,14 +92,8 @@ function isSquareAttacked(board, square, byColor) {
   }
 
   const knightJumps = [
-    [2, 1],
-    [2, -1],
-    [-2, 1],
-    [-2, -1],
-    [1, 2],
-    [1, -2],
-    [-1, 2],
-    [-1, -2],
+    [2, 1], [2, -1], [-2, 1], [-2, -1],
+    [1, 2], [1, -2], [-1, 2], [-1, -2],
   ];
   for (const [dr, dc] of knightJumps) {
     const nr = r + dr;
@@ -108,14 +104,10 @@ function isSquareAttacked(board, square, byColor) {
   }
 
   const sliders = [
-    [1, 0, ["r", "q"]],
-    [-1, 0, ["r", "q"]],
-    [0, 1, ["r", "q"]],
-    [0, -1, ["r", "q"]],
-    [1, 1, ["b", "q"]],
-    [1, -1, ["b", "q"]],
-    [-1, 1, ["b", "q"]],
-    [-1, -1, ["b", "q"]],
+    [1, 0, ["r", "q"]], [-1, 0, ["r", "q"]],
+    [0, 1, ["r", "q"]], [0, -1, ["r", "q"]],
+    [1, 1, ["b", "q"]], [1, -1, ["b", "q"]],
+    [-1, 1, ["b", "q"]], [-1, -1, ["b", "q"]],
   ];
 
   for (const [dr, dc, types] of sliders) {
@@ -186,14 +178,8 @@ function pseudoMovesForPiece(state, from) {
 
   if (piece.type === "n") {
     const jumps = [
-      [2, 1],
-      [2, -1],
-      [-2, 1],
-      [-2, -1],
-      [1, 2],
-      [1, -2],
-      [-1, 2],
-      [-1, -2],
+      [2, 1], [2, -1], [-2, 1], [-2, -1],
+      [1, 2], [1, -2], [-1, 2], [-1, -2],
     ];
     for (const [dr, dc] of jumps) {
       const nr = r + dr;
@@ -415,9 +401,12 @@ function renderBoard() {
     }
   }
 
+  // Update Top Panel UI
   turnLabelEl.textContent = game.turn === "w" ? "White" : "Black";
   gameStatusEl.textContent = status;
-  moveCounterEl.textContent = String(game.history.length);
+  if(moveCounterEl) {
+    moveCounterEl.textContent = String(game.history.length);
+  }
 }
 
 function renderHistory() {
@@ -427,6 +416,8 @@ function renderHistory() {
     li.textContent = `${game.history[i]}${game.history[i + 1] ? "  " + game.history[i + 1] : ""}`;
     moveHistoryEl.appendChild(li);
   }
+  // Auto-scroll to bottom of history
+  moveHistoryEl.scrollTop = moveHistoryEl.scrollHeight;
 }
 
 function onSquareTap(index) {
@@ -516,8 +507,7 @@ function undoMove() {
   const targetHalfMoves = game.history.length - 1;
   const historyCopy = [...game.history];
   initGame();
-  // Rebuild position by replaying moves from captured snapshots.
-  // We keep a snapshot per move to provide robust undo.
+  
   if (window.__snapshots && window.__snapshots[targetHalfMoves]) {
     const snap = window.__snapshots[targetHalfMoves];
     Object.assign(game, cloneState(snap));
@@ -528,6 +518,7 @@ function undoMove() {
   renderHistory();
 }
 
+// Snapshot system for robust undos
 window.__snapshots = [];
 const originalMakeMove = makeMove;
 makeMove = function wrappedMakeMove(move, promotionChoice = "q") {
@@ -548,6 +539,7 @@ makeMove = function wrappedMakeMove(move, promotionChoice = "q") {
   );
 };
 
+// Event Listeners
 document.getElementById("newGameBtn").addEventListener("click", () => {
   initGame();
   window.__snapshots = [];
@@ -560,4 +552,5 @@ document.getElementById("restartBtn").addEventListener("click", () => {
 
 document.getElementById("undoBtn").addEventListener("click", undoMove);
 
+// Start the game
 initGame();
