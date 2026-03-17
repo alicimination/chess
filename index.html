@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chess 1v1 Pass & Play</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header class="top-panel">
+        <h1>CHESS 1v1</h1>
+        <div class="status-grid">
+          <p><strong>Current Turn:</strong> <span id="turnLabel">White</span></p>
+          <p><strong>Game Status:</strong> <span id="gameStatus">In progress</span></p>
+          <p><strong>Move Counter:</strong> <span id="moveCounter">0</span></p>
+        </div>
+      </header>
+
+      <section class="board-wrap">
+        <div id="board" class="board" aria-label="Chess board"></div>
+      </section>
+
+      <section class="controls">
+        <button id="newGameBtn">New Game</button>
+        <button id="undoBtn">Undo Move</button>
+        <button id="restartBtn">Restart Game</button>
+      </section>
+
+      <section class="history-panel">
+        <h2>Move History</h2>
+        <ol id="moveHistory"></ol>
+      </section>
+    </main>
+
+    <div id="promotionModal" class="promotion-modal hidden" role="dialog" aria-modal="true">
+      <div class="promotion-card">
+        <p>Promote pawn to:</p>
+        <div id="promotionChoices" class="promotion-choices"></div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
