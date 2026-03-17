@@ -381,7 +381,6 @@ function statusText() {
 function renderBoard() {
   boardEl.innerHTML = "";
   const status = statusText();
-  boardEl.classList.toggle("flipped", game.turn === "b");
 
   const kingSq = findKing(game.board, game.turn);
   const checkNow = inCheck(game, game.turn);

@@ -70,21 +70,19 @@ h2 {
   max-width: 500px;
   display: grid;
   grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
-  transition: transform 0.42s ease;
   touch-action: manipulation;
-}
-
-.board.flipped {
-  transform: rotate(180deg);
 }
 
 .square {
   position: relative;
   display: grid;
   place-items: center;
+  border: 0;
+  padding: 0;
   font-size: clamp(1.4rem, 7vw, 2.1rem);
   user-select: none;
   -webkit-user-select: none;
@@ -100,10 +98,6 @@ h2 {
 
 .square .piece {
   transition: transform 0.2s ease;
-}
-
-.board.flipped .square .piece {
-  transform: rotate(180deg);
 }
 
 .square.selected {
