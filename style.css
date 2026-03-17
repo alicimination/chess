@@ -1,13 +1,17 @@
 :root {
-  --bg: #121212;
-  --panel: #1b1b1b;
-  --btn: #2c2c2c;
-  --text: #ffffff;
-  --light: #f0d9b5;
-  --dark: #b58863;
-  --highlight: #ffd54f;
-  --last-move: #81c784;
-  --check: #ff6b6b;
+  --bg: #0f172a; /* Deep Navy */
+  --panel: #1e293b;
+  --btn: #334155;
+  --btn-hover: #475569;
+  --accent: #38bdf8; /* Sky Blue */
+  --text: #f8fafc;
+  
+  /* Board Colors */
+  --light: #e2e8f0;
+  --dark: #94a3b8;
+  --highlight: rgba(56, 189, 248, 0.5);
+  --last-move: rgba(132, 204, 22, 0.3);
+  --check: rgba(239, 68, 68, 0.5);
 }
 
 * {
@@ -17,189 +21,171 @@
 body {
   margin: 0;
   min-height: 100vh;
-  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  background: var(--bg);
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background: radial-gradient(circle at top, #1e293b 0%, #0f172a 100%);
   color: var(--text);
-  display: grid;
-  place-items: center;
-  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
 }
 
 .app {
-  width: min(100%, 520px);
+  width: 100%;
+  max-width: 850px;
   display: grid;
-  gap: 0.9rem;
+  grid-template-columns: 1fr 280px; /* Sidebar layout for desktop */
+  gap: 24px;
+  align-items: start;
 }
 
-.top-panel,
-.history-panel {
+/* Responsive for Mobile */
+@media (max-width: 800px) {
+  .app {
+    grid-template-columns: 1fr;
+    max-width: 500px;
+  }
+}
+
+.top-panel {
+  grid-column: 1 / -1;
   background: var(--panel);
-  border-radius: 12px;
-  padding: 0.9rem;
+  padding: 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid rgba(255,255,255,0.05);
 }
 
-h1,
-h2 {
-  margin: 0 0 0.5rem;
-  text-align: center;
-  letter-spacing: 0.06em;
-}
-
-h2 {
-  font-size: 1rem;
+.top-panel h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 800;
+  background: linear-gradient(to right, #fff, var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .status-grid {
-  display: grid;
-  gap: 0.25rem;
-  font-size: 0.95rem;
+  display: flex;
+  gap: 20px;
 }
 
-.status-grid p {
-  margin: 0;
+#turnLabel {
+  padding: 4px 12px;
+  border-radius: 6px;
+  background: var(--accent);
+  color: #000;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
 }
 
+/* Board Styling */
 .board-wrap {
-  display: grid;
-  place-items: center;
+  background: #000;
+  padding: 8px;
+  border-radius: 12px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
 }
 
 .board {
-  width: min(100vw - 2rem, 500px);
+  width: min(90vw, 500px);
   aspect-ratio: 1 / 1;
-  max-width: 500px;
   display: grid;
   grid-template-columns: repeat(8, 1fr);
   grid-template-rows: repeat(8, 1fr);
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
-  touch-action: manipulation;
+  user-select: none;
 }
 
 .square {
   position: relative;
-  display: grid;
-  place-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border: 0;
-  padding: 0;
-  font-size: clamp(1.4rem, 7vw, 2.1rem);
-  user-select: none;
-  -webkit-user-select: none;
+  cursor: pointer;
+  font-size: clamp(1.8rem, 8vw, 2.8rem);
 }
 
-.square.light {
-  background: var(--light);
-}
-
-.square.dark {
-  background: var(--dark);
-}
-
-.square .piece {
-  transition: transform 0.2s ease;
-}
+.square.light { background: var(--light); color: #475569; }
+.square.dark { background: var(--dark); color: #1e293b; }
 
 .square.selected {
-  outline: 3px solid var(--highlight);
-  outline-offset: -3px;
+  background: #cbd5e1 !important;
+  box-shadow: inset 0 0 0 4px var(--accent);
 }
 
 .square.legal::after {
   content: "";
-  width: 28%;
-  aspect-ratio: 1;
+  width: 25%;
+  height: 25%;
+  background: rgba(0,0,0,0.15);
   border-radius: 50%;
-  background: rgba(255, 213, 79, 0.8);
 }
 
 .square.capture::after {
   content: "";
   position: absolute;
-  inset: 8%;
-  border: 3px solid rgba(255, 213, 79, 0.85);
+  width: 80%;
+  height: 80%;
+  border: 4px solid rgba(0,0,0,0.1);
   border-radius: 50%;
 }
 
-.square.last-move {
-  box-shadow: inset 0 0 0 100vmax rgba(129, 199, 132, 0.28);
+.square.last-move { background-color: #94a3b8 !important; opacity: 0.9; }
+.square.in-check { background-color: #fca5a5 !important; }
+
+/* Sidebar Panels */
+.side-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-.square.in-check {
-  box-shadow: inset 0 0 0 100vmax rgba(255, 107, 107, 0.45);
+.history-panel {
+  background: var(--panel);
+  border-radius: 16px;
+  padding: 1.2rem;
+  height: 350px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+#moveHistory {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding-left: 20px;
+  font-family: monospace;
+  font-size: 1.1rem;
+  color: #94a3b8;
 }
 
 .controls {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.6rem;
+  grid-template-columns: 1fr;
+  gap: 8px;
 }
 
 button {
+  cursor: pointer;
   border: none;
-  border-radius: 10px;
-  padding: 0.7rem 0.5rem;
+  border-radius: 8px;
+  padding: 12px;
   background: var(--btn);
-  color: var(--text);
-  font-weight: 700;
+  color: white;
+  font-weight: 600;
+  transition: background 0.2s;
 }
 
-button:active {
-  transform: translateY(1px);
-}
+button:hover { background: var(--btn-hover); }
+#newGameBtn { background: var(--accent); color: #0f172a; }
 
-.history-panel {
-  max-height: 180px;
-  overflow: auto;
-}
-
-#moveHistory {
-  margin: 0;
-  padding-left: 1.2rem;
-}
-
-#moveHistory li {
-  margin-bottom: 0.22rem;
-}
-
-.promotion-modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.6);
-  display: grid;
-  place-items: center;
-  z-index: 30;
-}
-
-.promotion-modal.hidden {
-  display: none;
-}
-
+/* Promotion Modal */
 .promotion-card {
-  background: #212121;
-  padding: 1rem;
-  border-radius: 12px;
-  min-width: 220px;
-  text-align: center;
-}
-
-.promotion-choices {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.5rem;
-}
-
-.promotion-choice {
-  font-size: 1.8rem;
-  padding: 0.4rem;
-}
-
-@media (max-width: 430px) {
-  .status-grid {
-    font-size: 0.88rem;
-  }
-
-  button {
-    font-size: 0.8rem;
-  }
+  background: var(--panel);
+  border: 2px solid var(--accent);
 }
